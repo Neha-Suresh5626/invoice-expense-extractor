@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import os
 from utils.ocr import extract_text
+from utils.extractor import extract_invoice_data
 
 app = Flask(__name__)
 
@@ -26,7 +27,9 @@ def upload_file():
 
         text = extract_text(filepath)
 
-        return text
+        data = extract_invoice_data(text)
+
+        return str(data)
 
     return "No file selected"
 
