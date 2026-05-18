@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import os
+from utils.ocr import extract_text
 
 app = Flask(__name__)
 
@@ -23,7 +24,9 @@ def upload_file():
 
         file.save(filepath)
 
-        return f"{file.filename} uploaded successfully"
+        text = extract_text(filepath)
+
+        return text
 
     return "No file selected"
 
