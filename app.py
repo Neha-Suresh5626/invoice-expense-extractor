@@ -33,10 +33,21 @@ def upload_file():
 
         excel_path = generate_excel(data)
 
-        return send_file(excel_path, as_attachment=True)
+        return render_template(
+            "result.html",
+            data=data
+        )
 
     return "No file selected"
 
+@app.route("/download")
+
+def download_file():
+
+    return send_file(
+        "outputs/invoice_data.xlsx",
+        as_attachment=True
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
