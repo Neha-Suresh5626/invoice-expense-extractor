@@ -1,10 +1,14 @@
-from utils.ocr import extract_text
-from utils.extractor import extract_invoice_data
+from utils.exporter import generate_excel
 
-text = extract_text("sample_invoice.jpeg")
+sample_data = {
 
-print(text)
+    "invoice_number": "000000",
 
-data = extract_invoice_data(text)
+    "gst": "520.00",
 
-print(data)
+    "total": "4520.00"
+}
+
+path = generate_excel(sample_data)
+
+print(path)

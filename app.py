@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 import os
 from utils.ocr import extract_text
 from utils.extractor import extract_invoice_data
+from flask import send_file
+from utils.exporter import generate_excel
 
 app = Flask(__name__)
 
@@ -29,7 +31,9 @@ def upload_file():
 
         data = extract_invoice_data(text)
 
-        return str(data)
+        excel_path = generate_excel(data)
+
+        return send_file(excel_path, as_attachment=True)
 
     return "No file selected"
 
