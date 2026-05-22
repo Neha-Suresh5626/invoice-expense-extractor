@@ -1,11 +1,22 @@
 import pandas as pd
+import os
 
-def generate_excel(data):
+
+def export_to_excel(data, filepath):
 
     df = pd.DataFrame([data])
 
-    output_path = "outputs/invoice_data.xlsx"
+    if os.path.exists(filepath):
 
-    df.to_excel(output_path, index=False)
+        existing_df = pd.read_excel(filepath)
 
-    return output_path
+        updated_df = pd.concat(
+            [existing_df, df],
+            ignore_index=True
+        )
+
+        updated_df.to_excel(filepath, index=False)
+
+    else:
+
+        df.to_excel(filepath, index=False)
