@@ -1,5 +1,23 @@
-<form action="/upload" method="POST" enctype="multipart/form-data">
-  <input type="file" name="invoice" />
+<!doctype html>
+<html>
+  <head>
+    <title>Invoice Processor</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Smart Invoice Processing Platform</h1>
 
-  <button type="submit">Upload Invoice</button>
-</form>
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="invoice" required />
+
+        <button type="submit">Process Invoice</button>
+      </form>
+
+      <a href="/dashboard">View Dashboard</a>
+    </div>
+  </body>
+</html>
