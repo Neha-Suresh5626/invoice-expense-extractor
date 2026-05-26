@@ -1,19 +1,129 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Result</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>InvoiceIQ — Result</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <h1>Extracted Invoice Data</h1>
+    <header class="site-header">
+      <div class="logo-mark">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">InvoiceIQ</div>
+        <div class="logo-sub">Expense Extractor</div>
+      </div>
+      <div class="header-right">
+        <a href="/" class="nav-link">Upload</a>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/history" class="nav-link">History</a>
+        <a href="/logout" class="btn btn-sm btn-ghost">Logout</a>
+      </div>
+    </header>
 
-    <ul>
-      <li>Vendor: {{ data.vendor_name }}</li>
-      <li>Invoice Number: {{ data.invoice_number }}</li>
-      <li>Date: {{ data.date }}</li>
-      <li>Tax: {{ data.tax }}</li>
-      <li>Total: {{ data.total }}</li>
-    </ul>
+    <div class="page-wrap">
+      <!-- Result hero -->
+      <div class="result-hero">
+        <div class="result-check">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#00e5a0"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+        <div>
+          <div class="result-label">Total Amount</div>
+          <div class="result-total">{{ data.currency }} {{ data.total }}</div>
+          <div class="result-vendor">{{ data.vendor_name }}</div>
+        </div>
+        <div class="result-actions">
+          {% if data.excel_file %}
+          <a href="/download/{{ data.excel_file }}" class="btn btn-primary">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Excel
+          </a>
+          {% endif %}
+          <a href="/" class="btn">Upload Another</a>
+          <a href="/dashboard" class="btn btn-ghost">Dashboard</a>
+        </div>
+      </div>
 
-    <a href="/">Upload Another</a>
+      <!-- Invoice type badge -->
+      <div
+        style="
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        "
+      >
+        <span class="section-title">Invoice Type</span>
+        <span
+          class="badge {% if data.invoice_type=='handwritten' %}badge-hw{% elif data.invoice_type=='mixed' %}badge-mixed{% else %}badge-typed{% endif %}"
+        >
+          {{ data.invoice_type | capitalize }}
+        </span>
+        <span class="badge badge-blue">{{ data.category }}</span>
+      </div>
+
+      <!-- Field grid -->
+      <div class="field-grid">
+        {% set fields = [ ('Vendor Name', data.vendor_name, '🏢'), ('Invoice
+        No.', data.invoice_number, '🔢'), ('Invoice Date', data.date, '📅'),
+        ('Due Date', data.due_date, '⏰'), ('Subtotal', data.subtotal, '💰'),
+        ('Tax', data.tax, '📋'), ('GST', data.gst, '🧾'), ('Total', data.total,
+        '✅'), ('Currency', data.currency, '💱'), ('Category', data.category,
+        '🏷️'), ] %} {% for key, val, icon in fields %}
+        <div class="field-item">
+          <div class="field-key">{{ icon }} {{ key }}</div>
+          <div
+            class="field-val {% if val in ['Not Available','0','0.0'] %}na{% endif %}"
+          >
+            {{ val }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Raw OCR text -->
+      <div class="section-header">
+        <div class="section-title">Raw OCR Text</div>
+      </div>
+      <div class="raw-text-box">
+        <pre>{{ data.raw_text or 'No text extracted.' }}</pre>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,23 +1,220 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Invoice Processor</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>InvoiceIQ — Upload</title>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <div class="container">
-      <h1>Smart Invoice Processing Platform</h1>
+    <header class="site-header">
+      <div class="logo-mark">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">InvoiceIQ</div>
+        <div class="logo-sub">Expense Extractor</div>
+      </div>
+      <div class="header-right">
+        <a href="/" class="nav-link active">Upload</a>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/history" class="nav-link">History</a>
+        <span class="nav-link" style="color: var(--text3)">{{ username }}</span>
+        <a href="/logout" class="btn btn-sm btn-ghost">Logout</a>
+      </div>
+    </header>
 
-      <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="invoice" required />
+    <div class="page-wrap">
+      <div class="page-hero">
+        <div>
+          <div class="hero-title">Upload Invoice</div>
+          <div class="hero-sub">PDF, JPG, PNG, JPEG — typed or handwritten</div>
+        </div>
+        <a href="/dashboard" class="btn btn-sm">View Dashboard →</a>
+      </div>
 
-        <button type="submit">Process Invoice</button>
+      <form
+        action="/"
+        method="POST"
+        enctype="multipart/form-data"
+        id="uploadForm"
+      >
+        <!-- Drop zone -->
+        <div class="upload-zone" id="dropZone">
+          <input
+            type="file"
+            name="file"
+            id="fileInput"
+            accept=".pdf,.png,.jpg,.jpeg,.tiff,.bmp"
+          />
+          <div class="upload-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#4a5568"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
+              <polyline points="16 16 12 12 8 16" />
+              <line x1="12" y1="12" x2="12" y2="21" />
+              <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3" />
+            </svg>
+          </div>
+          <div class="upload-title" id="uploadTitle">
+            Drop invoice here or click to browse
+          </div>
+          <div class="upload-sub" id="uploadSub">
+            Supports PDF, PNG, JPG, JPEG, TIFF, BMP — max 16 MB
+          </div>
+          <div class="file-types">
+            <span class="badge badge-blue">PDF</span>
+            <span class="badge badge-green">PNG</span>
+            <span class="badge badge-amber">JPG</span>
+            <span class="badge badge-blue">TIFF</span>
+          </div>
+        </div>
+
+        <!-- Invoice type selector -->
+        <div style="margin-top: 24px">
+          <div class="section-title" style="margin-bottom: 12px">
+            Select Invoice Type
+          </div>
+          <div class="type-selector">
+            <label class="type-card selected" id="card-typed">
+              <input type="radio" name="invoice_type" value="typed" checked />
+              <div class="type-icon">🖨️</div>
+              <div class="type-label">Typed / Printed</div>
+              <div class="type-desc">Computer-generated or printed invoice</div>
+            </label>
+
+            <label class="type-card" id="card-handwritten">
+              <input type="radio" name="invoice_type" value="handwritten" />
+              <div class="type-icon">✍️</div>
+              <div class="type-label">Handwritten</div>
+              <div class="type-desc">Manually written invoice or receipt</div>
+            </label>
+
+            <label class="type-card" id="card-mixed">
+              <input type="radio" name="invoice_type" value="mixed" />
+              <div class="type-icon">📄</div>
+              <div class="type-label">Mixed</div>
+              <div class="type-desc">
+                Printed template with handwritten entries
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div
+          style="
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+          "
+        >
+          <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
+              />
+            </svg>
+            Process Invoice
+          </button>
+          <span
+            style="
+              font-size: 12px;
+              color: var(--text3);
+              font-family: var(--mono);
+            "
+            id="fileLabel"
+            >No file selected</span
+          >
+        </div>
+
+        <!-- Processing spinner -->
+        <div class="spinner-wrap" id="spinner">
+          <div class="spinner"></div>
+          <div
+            style="
+              font-family: var(--mono);
+              font-size: 12px;
+              color: var(--text3);
+            "
+          >
+            Running OCR pipeline… please wait
+          </div>
+        </div>
       </form>
 
-      <a href="/dashboard">View Dashboard</a>
+      <!-- Tips -->
+      <div class="card" style="margin-top: 32px">
+        <div class="section-title" style="margin-bottom: 12px">
+          Tips for Best Results
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+          <div style="font-size: 13px; color: var(--text2)">
+            ✦ PDFs give the highest OCR accuracy
+          </div>
+          <div style="font-size: 13px; color: var(--text2)">
+            ✦ Ensure image is well-lit and sharp
+          </div>
+          <div style="font-size: 13px; color: var(--text2)">
+            ✦ For handwritten: scan at 300 DPI+
+          </div>
+          <div style="font-size: 13px; color: var(--text2)">
+            ✦ Keep all text within the frame
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="/static/charts.js"></script>
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const submitBtn = document.getElementById("submitBtn");
+      const fileLabel = document.getElementById("fileLabel");
+
+      fileInput.addEventListener("change", () => {
+        const f = fileInput.files[0];
+        if (f) {
+          document.getElementById("uploadTitle").textContent = f.name;
+          document.getElementById("uploadSub").textContent =
+            (f.size / 1024).toFixed(1) + " KB · ready to process";
+          fileLabel.textContent = f.name;
+          submitBtn.disabled = false;
+        }
+      });
+
+      document.getElementById("uploadForm").addEventListener("submit", () => {
+        document.getElementById("spinner").classList.add("active");
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<span class="spin-inline"></span>&nbsp;Processing…';
+      });
+    </script>
   </body>
 </html>
