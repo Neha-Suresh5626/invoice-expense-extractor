@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>
+      InvoiceIQ — {% if mode=='register' %}Register{% else %}Login{% endif %}
+    </title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="logo-mark">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <div
+            style="
+              font-family: var(--mono);
+              font-size: 20px;
+              font-weight: 600;
+              color: var(--text);
+            "
+          >
+            InvoiceIQ
+          </div>
+          <div
+            style="
+              font-family: var(--mono);
+              font-size: 10px;
+              color: var(--text3);
+              letter-spacing: 0.1em;
+              text-transform: uppercase;
+              margin-top: 2px;
+            "
+          >
+            Expense Extractor
+          </div>
+        </div>
+
+        <div class="auth-title">
+          {% if mode=='register' %}Create account{% else %}Sign in{% endif %}
+        </div>
+        <div class="auth-sub">
+          {% if mode=='register' %}Start processing invoices instantly{% else
+          %}Welcome back — sign in to continue{% endif %}
+        </div>
+
+        {% if error %}
+        <div class="form-error">{{ error }}</div>
+        {% endif %} {% if msg %}
+        <div class="form-success">{{ msg }}</div>
+        {% endif %}
+
+        <form method="POST">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input
+              class="form-input"
+              type="text"
+              name="username"
+              placeholder="Enter username"
+              required
+              autofocus
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input
+              class="form-input"
+              type="password"
+              name="password"
+              placeholder="{% if mode=='register' %}Min 6 characters{% else %}Enter password{% endif %}"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 100%; justify-content: center; margin-top: 8px"
+          >
+            {% if mode=='register' %}Create account{% else %}Sign in{% endif %}
+          </button>
+        </form>
+
+        <div class="auth-switch">
+          {% if mode=='register' %} Already have an account?
+          <a href="/login">Sign in</a> {% else %} Don't have an account?
+          <a href="/register">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

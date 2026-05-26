@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>InvoiceIQ — History</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-mark">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">InvoiceIQ</div>
+        <div class="logo-sub">Expense Extractor</div>
+      </div>
+      <div class="header-right">
+        <a href="/" class="nav-link">Upload</a>
+        <a href="/dashboard" class="nav-link">Dashboard</a>
+        <a href="/history" class="nav-link active">History</a>
+        <span class="nav-link" style="color: var(--text3)">{{ username }}</span>
+        <a href="/logout" class="btn btn-sm btn-ghost">Logout</a>
+      </div>
+    </header>
+
+    <div class="page-wrap">
+      <div class="page-hero">
+        <div>
+          <div class="hero-title">Invoice History</div>
+          <div class="hero-sub">{{ invoices|length }} invoice(s) processed</div>
+        </div>
+        <div style="display: flex; gap: 10px">
+          <a href="/download/invoices_export.xlsx" class="btn btn-sm"
+            >Export Excel ↓</a
+          >
+          <a href="/" class="btn btn-sm btn-primary">+ Upload New</a>
+        </div>
+      </div>
+
+      <div class="history-table-wrap">
+        {% if invoices %}
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Vendor</th>
+                <th>Invoice No.</th>
+                <th>Date</th>
+                <th>Due Date</th>
+                <th>Total</th>
+                <th>GST</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Processed</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for inv in invoices %}
+              <tr>
+                <td class="td-id">{{ inv.id }}</td>
+                <td style="color: var(--text); font-weight: 500">
+                  {{ inv.vendor_name }}
+                </td>
+                <td class="mono">{{ inv.invoice_number }}</td>
+                <td class="mono">{{ inv.date }}</td>
+                <td class="mono">{{ inv.due_date }}</td>
+                <td class="td-amount mono">
+                  {{ inv.currency }} {{ inv.total }}
+                </td>
+                <td class="mono" style="color: var(--amber)">
+                  {{ inv.currency }} {{ inv.gst }}
+                </td>
+                <td>
+                  <span class="badge badge-blue">{{ inv.category }}</span>
+                </td>
+                <td>
+                  {% if inv.invoice_type == 'handwritten' %}
+                  <span class="badge badge-hw">Handwritten</span>
+                  {% elif inv.invoice_type == 'mixed' %}
+                  <span class="badge badge-mixed">Mixed</span>
+                  {% else %}
+                  <span class="badge badge-typed">Typed</span>
+                  {% endif %}
+                </td>
+                <td class="mono" style="font-size: 11px; color: var(--text3)">
+                  {{ inv.created_at[:16] }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="history-empty">
+          No invoices yet.<br />
+          <a href="/" style="color: var(--accent); text-decoration: none"
+            >Upload your first invoice →</a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

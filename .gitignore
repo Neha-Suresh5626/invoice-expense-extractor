@@ -1,6 +1,10 @@
 venv/
-__pycache__/
-database.db
 uploads/
 outputs/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
 ~$*.xlsx
+database.db
+.env
