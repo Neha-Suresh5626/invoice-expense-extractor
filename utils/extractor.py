@@ -68,7 +68,7 @@ def extract_invoice_data(lines_with_layout, full_text):
         "raw_text":       full_text,
     }
 
-    # ── Vendor name (your original logic) ─────────────────────────────────
+    # ── Vendor name ─────────────────────────────────
     header_lines = [l for l in lines_with_layout if l.get("zone") == "header"]
     ignore_words = ["invoice", "bill", "tax", "amount", "qty",
                     "description", "phone", "email", "bank", "payment"]
