@@ -1,5 +1,5 @@
 """
-utils/ocr.py — Layout-aware Tesseract OCR (from your existing code, enhanced)
+utils/ocr.py — Layout-aware Tesseract OCR
 """
 import pytesseract
 from pytesseract import Output
