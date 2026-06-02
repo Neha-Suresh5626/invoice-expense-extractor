@@ -3,7 +3,7 @@ utils/extractor.py — Field extraction + expense categorisation
 Based on your original code, extended with more patterns and categories.
 """
 import re
-
+from utils.ai_extractor import extract_invoice_ai
 # ── Expense categories ─────────────────────────────────────────────────────
 
 CATEGORIES = {
@@ -177,5 +177,28 @@ def extract_invoice_data(lines_with_layout, full_text):
 
     # ── Category ───────────────────────────────────────────────────────────
     data["category"] = categorise(full_text)
+    # ── Gemini AI Enhancement ──────────────────────────────────────────────
+    try:
+
+        ai_data = extract_invoice_ai(full_text)
+
+        for field in [
+          "vendor_name",
+          "invoice_number",
+          "date",
+          "subtotal",
+          "gst",
+          "tax",
+          "total"
+    ]:
+          value = ai_data.get(field)
+
+          if value and str(value).strip():
+
+            data[field] = str(value)
+
+    except Exception as e:
+
+        print("Gemini Error:", e)
 
     return data
