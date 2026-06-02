@@ -7,7 +7,16 @@ Internship MVP matching the full flowchart architecture.
 - **Login / User Authentication** — register, login, per-user data
 - **Select Invoice Type** — Typed / Handwritten / Mixed
 - **OCR** — Tesseract (typed) + EasyOCR (handwritten)
-- **Field Extraction** — Vendor, Invoice#, Date, Due Date, Total, GST, Tax, Currency
+- **AI Extraction** — Google Gemini 2.5 Flash
+- **AI-Powered Field Extraction** — Gemini AI + OCR
+    - Vendor
+    - Invoice Number
+    - Date
+    - Due Date
+    - Total
+    - GST
+    - Tax
+    - Currency
 - **Expense Categorisation** — Electronics, Food, Stationery, Travel, Utilities, Software, Medical, Marketing, Maintenance
 - **Analytics Dashboard**
   - Monthly spend trend (line chart)
@@ -16,6 +25,22 @@ Internship MVP matching the full flowchart architecture.
   - GST analysis (horizontal bar + table)
 - **Excel Export** — formatted, appends every invoice
 - **Invoice History** — filterable table
+
+
+## Architecture
+
+Invoice
+   ↓
+OCR (Tesseract / EasyOCR)
+   ↓
+Raw Text Extraction
+   ↓
+Gemini AI Field Extraction
+   ↓
+SQLite Database
+   ↓
+Dashboard & Analytics
+
 
 ## Tech Stack
 
@@ -30,6 +55,7 @@ Internship MVP matching the full flowchart architecture.
 | Export           | pandas + openpyxl              |
 | Charts           | Chart.js (frontend)            |
 | UI               | IBM Plex Mono/Sans, dark theme |
+| AI Extraction    | Google Gemini 2.5 Flash        |
 
 ## Setup
 
@@ -58,8 +84,14 @@ brew install tesseract poppler
 
 ```bash
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
+```
+
+Create a `.env` file in the project root:
+
+```env
+GEMINI_API_KEY=YOUR_API_KEY
 ```
 
 ### 3. Run
@@ -87,6 +119,7 @@ invoice-expense-extractor/
 ├── .gitignore
 ├── uploads/             ← uploaded invoices (runtime)
 ├── outputs/             ← Excel exports (runtime)
+├── .env                ← Gemini API key (not tracked)
 ├── static/
 │   ├── style.css        ← IBM Plex dark theme
 │   └── charts.js        ← Chart.js config (5 chart types)
@@ -102,6 +135,7 @@ invoice-expense-extractor/
     ├── handwritten_ocr.py ← EasyOCR
     ├── extractor.py     ← regex extraction + categorisation
     ├── exporter.py      ← Excel generation
+    ├── ai_extractor.py  ← Gemini-powered invoice extraction
     ├── db.py            ← SQLite (users + invoices + analytics queries)
     └── pdf_processor.py ← PDF → PNG
 ```
