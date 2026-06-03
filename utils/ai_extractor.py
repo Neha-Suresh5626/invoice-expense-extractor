@@ -32,9 +32,10 @@ Rules:
 1. Return ONLY valid JSON.
 2. Extract both gst and tax separately if available.
 3. If only one tax value exists, put the same value in both gst and tax.
-4. Ignore billed-to customer names.
+4. Ignore billed-to/issued-to customer names.
 5. Ignore item descriptions.
 6. Vendor name must be the company issuing the invoice.
+7. If vendor name is not explicitly mentioned, extract the most likely company name based on the invoice text.
 
 Invoice Text:
 {text}

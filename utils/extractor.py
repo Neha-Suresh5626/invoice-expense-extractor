@@ -179,17 +179,20 @@ def extract_invoice_data(lines_with_layout, full_text):
     data["category"] = categorise(full_text)
     # ── Gemini AI Enhancement ──────────────────────────────────────────────
     try:
-
+        
         ai_data = extract_invoice_ai(full_text)
 
         for field in [
-          "vendor_name",
-          "invoice_number",
-          "date",
-          "subtotal",
-          "gst",
-          "tax",
-          "total"
+            "vendor_name",
+            "invoice_number",
+            "date",
+            "due_date",
+            "subtotal",
+            "gst",
+            "tax",
+            "total",
+            "currency",
+            "category"
     ]:
           value = ai_data.get(field)
 
